@@ -209,7 +209,7 @@ def parse_contacts_file(filename: str, data: bytes) -> list[Contact]:
     ext = Path(filename).suffix.lower()
     if ext == ".csv":
         return parse_contacts_csv(data)
-    elif ext in {".xlsx", ".xls"}:
+    elif ext == ".xlsx":
         return parse_contacts_excel(data)
     else:
         raise ContactParseError(

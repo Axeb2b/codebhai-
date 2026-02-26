@@ -1,6 +1,7 @@
 """Unit tests for the contact parser (contact_parser.py)."""
 
 import io
+from typing import Any
 import pytest
 import openpyxl
 
@@ -103,7 +104,7 @@ def test_csv_no_plus_normalised():
 # parse_contacts_excel
 # ---------------------------------------------------------------------------
 
-def _make_excel(rows: list[tuple]) -> bytes:
+def _make_excel(rows: list[tuple[Any, ...]]) -> bytes:
     """Create an in-memory Excel workbook and return its bytes."""
     wb = openpyxl.Workbook()
     ws = wb.active

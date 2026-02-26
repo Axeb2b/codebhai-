@@ -66,7 +66,10 @@ class RateLimiter:
                 if not per_minute_ok:
                     wait = max(wait, self._minute_window[0] + 60 - now)
 
-                # Release lock while sleeping so other coroutines can check
+                # Release lock while sleeping so other coroutines can proceed.
+                # The try/finally guarantees the lock is always re-acquired after
+                # sleeping, keeping the invariant that we hold the lock at the
+                # top of the while loop.
                 self._lock.release()
                 try:
                     await asyncio.sleep(wait)
