@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        env:
+          TELEGRAM_BOT_TOKEN: test_token
+          BIRD_API_KEY: test_key
+          BIRD_WORKSPACE_ID: test_workspace
+          BIRD_CHANNEL_ID: test_channel
+          WHATSAPP_TEMPLATE_ID: test_template
+          WHATSAPP_TEMPLATE_LANGUAGE: en
+        run: pytest tests/ -v
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t codebhai-bot .
